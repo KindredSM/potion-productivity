@@ -2,12 +2,45 @@
   <h1 class="header">Potion</h1>
   <input type="text" class="search" placeholder="Search Potion..." />
   <nav>
-    <router-link to="/">to-do</router-link>
-    <router-link to="/about">tomorrow</router-link>
-    <button class="new-page">New page</button>
+    <router-link
+      v-for="label in labels"
+      v-bind:key="label"
+      href="#"
+      v-bind:to="'/note/' + label"
+      v-bind:style="{
+        selected: label === selected,
+      }"
+    >
+      {{ label }}
+    </router-link>
+
+    <!--
+    <router-link to="/about">tomorrow</router-link>-->
+    <button class="new-page" v-on:click="newNote">New Note</button>
   </nav>
   <router-view />
 </template>
+
+<script>
+export default {
+  computed: {
+    labels() {
+      console.log("store", this.$store);
+
+      return this.$store.getters.labels;
+    },
+    selected() {
+      console.log(this.$route.params);
+      return this.$route.params.selected;
+    },
+  },
+  methods: {
+    newNote() {
+      this.$store.commit("newNote");
+    },
+  },
+};
+</script>
 
 <style lang="scss">
 $textColor: #e1e1e1;
@@ -29,10 +62,12 @@ body {
 }
 
 .header {
+  position: fixed;
   font-size: 1.2rem;
   font-weight: 700;
 }
 .search {
+  position: fixed;
   background: $highlightColor;
   outline: none;
   box-shadow: none;
@@ -59,6 +94,7 @@ nav {
   left: 3%;
 
   a {
+    // position: fixed;
     width: 10rem;
     height: 1.2rem;
     display: flex;
@@ -78,6 +114,9 @@ nav {
     }
   }
   .new-page {
+    position: fixed;
+    left: 2rem;
+    bottom: 10vh;
     font-size: 1rem;
     margin-top: 500px;
     color: $textColor;
