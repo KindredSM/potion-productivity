@@ -62,12 +62,11 @@ body {
 }
 
 .header {
-  position: fixed;
+  cursor: pointer;
   font-size: 1.2rem;
   font-weight: 700;
 }
 .search {
-  position: fixed;
   background: $highlightColor;
   outline: none;
   box-shadow: none;

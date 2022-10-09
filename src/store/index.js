@@ -3,7 +3,7 @@ import { createStore } from "vuex";
 export default createStore({
   state: {
     notes: {
-      "kindreds note": "hi this is kindred's note",
+      "Home Note": "hello, this is a note",
     },
   },
   getters: {
@@ -15,11 +15,11 @@ export default createStore({
     newNote: function (state) {
       let i = 1;
 
-      while ("Untitled " + i in state.notes) {
+      while ("Note " + i in state.notes) {
         i++;
       }
 
-      state.notes["Untitled " + i] = "";
+      state.notes["Note " + i] = "";
     },
   },
   actions: {},
