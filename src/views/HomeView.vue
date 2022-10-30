@@ -1,10 +1,6 @@
 <template>
   <div class="home"></div>
-  <textarea
-    class="input-header"
-    placeholder="Untitled"
-    v-model="docName"
-  ></textarea>
+  <textarea class="input-header" placeholder="Untitled"></textarea>
   <textarea class="input-block" placeholder="Type anywhere..."></textarea>
 </template>
 

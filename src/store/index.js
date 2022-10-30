@@ -21,6 +21,9 @@ export default createStore({
 
       state.notes["Note " + i] = "";
     },
+    removeTask: function (index) {
+      this.items.splice(index, 1);
+    },
   },
   actions: {},
   modules: {},

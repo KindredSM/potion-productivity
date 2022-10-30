@@ -3,15 +3,16 @@
   <input type="text" class="search" placeholder="Search Potion..." />
   <nav>
     <router-link
-      v-for="label in labels"
+      v-for="(label, index) in labels"
       v-bind:key="label"
       href="#"
+      @remove="removeTask(index)"
       v-bind:to="'/note/' + label"
       v-bind:style="{
         selected: label === selected,
       }"
     >
-      {{ label }}
+      {{ label }} <button class="delete" @click="$emit('remove')">X</button>
     </router-link>
 
     <!--
@@ -38,6 +39,9 @@ export default {
     newNote() {
       this.$store.commit("newNote");
     },
+    removeTask: function (index) {
+      this.items.splice(index, 1);
+    },
   },
 };
 </script>
@@ -46,6 +50,7 @@ export default {
 $textColor: #e1e1e1;
 $primaryColor: #1f1f1f;
 $highlightColor: #323232;
+$darkenColor: rgb(174, 174, 174);
 
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@100;300;500;700&display=swap");
 
@@ -71,7 +76,7 @@ body {
   outline: none;
   box-shadow: none;
   border-radius: 2px;
-  width: 10rem;
+  width: 11rem;
   border: 1px #1f1f1f solid;
   top: 7%;
   height: 1.5rem;
@@ -111,7 +116,21 @@ nav {
       font-weight: 700;
       // color: #87b5ff;
     }
+    .delete {
+      border: none;
+      border-radius: 2px;
+      position: absolute;
+      font-weight: 900;
+      color: #e1e1e1;
+      background: none;
+      margin-left: 9rem;
+      cursor: pointer;
+    }
+    .delete:hover {
+      background: rgb(0, 0, 0);
+    }
   }
+
   .new-page {
     position: fixed;
     left: 2rem;
@@ -119,14 +138,20 @@ nav {
     font-size: 1rem;
     margin-top: 500px;
     color: $textColor;
-    width: 8rem;
+    width: 7rem;
     height: 3rem;
     background-color: $highlightColor;
     outline: none;
     box-shadow: none;
     border: 1px #1f1f1f solid;
     cursor: pointer;
-    font-weight: 900;
+    font-weight: 700;
+    transition: ease-in-out 0.1s;
+
+    &:hover {
+      transform: scale(1.01);
+      color: $darkenColor;
+    }
   }
 }
 </style>
