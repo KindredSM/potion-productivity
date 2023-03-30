@@ -1,6 +1,9 @@
 <template>
   <div class="home">
-    <h1 class="header">welcome</h1>
+    <div class="header">
+      <h1 class="header">Welcome to Potion.</h1>
+    </div>
+    <p class="page-content">here, you can write notes</p>
     <div class="notes"></div>
   </div>
 </template>
@@ -14,13 +17,16 @@
   margin-right: 32px;
   margin-left: 128px;
 }
+
 .header {
   background: linear-gradient(215.78deg, #ff5d2b 2.99%, #ffb800 104.97%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
   text-fill-color: transparent;
+  text-align: left;
 }
+
 .notes {
   display: flex;
   flex-direction: row;

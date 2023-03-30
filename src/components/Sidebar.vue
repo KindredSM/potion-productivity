@@ -2,11 +2,11 @@
   <ul class="sidebar">
     <span class="menu">
       <li class="menu-item" v-for="(page, index) in pages" :key="index">
-        <router-link :to="`/page/${index}`">
-          <p>
-            {{ page
-            }}<button class="delete" @click="deletePage(index)">X</button>
+        <router-link :to="`/page/${index}`" class="menu-item">
+          <p class="page-title">
+            {{ page.title }}
           </p>
+          <button class="delete" @click="deletePage(index)">X</button>
         </router-link>
       </li>
     </span>
@@ -17,30 +17,45 @@
 </template>
 
 <script lang="ts">
+import { v4 as uuidv4 } from "uuid";
 export default {
   data() {
     return {
-      pages: ["Page 1"],
+      pages: [] as { id: string; title: string; content: string }[],
     };
+  },
+  created() {
+    const storedPages = JSON.parse(localStorage.getItem("pages") || "[]");
+    this.pages = storedPages || [];
   },
   methods: {
     addPage() {
-      const newPage = `Page ${this.pages.length + 1}`;
+      const newPage = {
+        id: uuidv4(),
+        title: `Page ${this.pages.length + 1}`,
+        content: "",
+      };
       this.pages.push(newPage);
+
+      localStorage.setItem("pages", JSON.stringify(this.pages));
     },
-    deletePage(index) {
+
+    deletePage(index: number) {
       this.pages.splice(index, 1);
+
+      localStorage.setItem("pages", JSON.stringify(this.pages));
     },
-  },
-  mounted() {
-    const savedPages = localStorage.getItem("pages");
-    if (savedPages) {
-      this.pages = JSON.parse(savedPages);
-    }
   },
   watch: {
-    pages(newPages) {
-      localStorage.setItem("pages", JSON.stringify(newPages));
+    pages: {
+      handler(newPages, oldPages) {
+        for (let i = 0; i < newPages.length; i++) {
+          if (JSON.stringify(newPages[i]) !== JSON.stringify(oldPages[i])) {
+            localStorage.setItem(`page-${i}`, JSON.stringify(newPages[i]));
+          }
+        }
+      },
+      deep: true,
     },
   },
 };
@@ -50,16 +65,36 @@ export default {
 .menu {
   padding-top: 100px;
   display: flex;
+  align-items: center;
   flex-direction: column;
   gap: 5px;
   font-size: 14px;
   text-align: left;
-  width: 80%;
+  width: 100%;
+}
+
+.menu-item {
+  display: flex;
+  flex-direction: row;
+
+  align-content: center;
+  align-items: center;
+  padding-left: 10px;
+  background-color: #1a1a1a;
+  width: 90%;
   margin: 0 auto;
+  position: inherit;
+  border-radius: 3px;
+  transition: ease 0.3s;
+}
+
+.menu-item:hover {
+  cursor: pointer;
+  background-color: #202020;
 }
 
 .delete {
-  margin-left: 10px;
+  border-radius: 50%;
 }
 
 .sidebar {

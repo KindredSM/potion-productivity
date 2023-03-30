@@ -21,9 +21,6 @@ a {
   text-decoration: inherit;
   transition: ease 0.3s;
 }
-a:hover {
-  color: #ff5d2b;
-}
 
 body {
   margin: 0;
