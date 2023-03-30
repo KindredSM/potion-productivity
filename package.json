@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "serve": "^14.2.0",
     "uuid": "^9.0.0",
     "vue": "^3.2.47",
     "vue-router": "^4.1.6"

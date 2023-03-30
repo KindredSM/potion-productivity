@@ -74,7 +74,21 @@ export default {
       }
     },
   },
+  watch: {
+    id() {
+      const pages = JSON.parse(localStorage.getItem("pages") || "[]");
+      const page = pages.find((p: any) => p.id === this.id);
+      if (page) {
+        this.content = page.content;
+        this.title = page.title;
+      } else {
+        this.content = "";
+        this.title = "";
+      }
+    },
+  },
   mounted() {
+    console.log("Page mounted with id", this.id);
     const pages = JSON.parse(localStorage.getItem("pages") || "[]");
     const page = pages.find((p: any) => p.id === this.id);
     if (page) {

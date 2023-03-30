@@ -1,18 +1,14 @@
 <template>
   <ul class="sidebar">
     <span class="menu">
-      <li class="menu-item" v-for="(page, index) in pages" :key="index">
-        <router-link :to="`/page/${index}`" class="menu-item">
-          <p class="page-title">
-            {{ page.title }}
-          </p>
+      <li class="menu-item" v-for="(page, index) in pages" :key="page.id">
+        <router-link :to="`/page/${page.id}`" class="menu-item">
+          <p class="page-title">{{ page.title }}</p>
           <button class="delete" @click="deletePage(index)">X</button>
         </router-link>
       </li>
     </span>
-    <button @click="addPage">
-      <p>New Page +</p>
-    </button>
+    <button @click="addPage"><p>New Page +</p></button>
   </ul>
 </template>
 
@@ -44,18 +40,6 @@ export default {
       this.pages.splice(index, 1);
 
       localStorage.setItem("pages", JSON.stringify(this.pages));
-    },
-  },
-  watch: {
-    pages: {
-      handler(newPages, oldPages) {
-        for (let i = 0; i < newPages.length; i++) {
-          if (JSON.stringify(newPages[i]) !== JSON.stringify(oldPages[i])) {
-            localStorage.setItem(`page-${i}`, JSON.stringify(newPages[i]));
-          }
-        }
-      },
-      deep: true,
     },
   },
 };

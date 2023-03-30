@@ -3,7 +3,9 @@
     <div class="header">
       <h1 class="header">Welcome to Potion.</h1>
     </div>
-    <p class="page-content">here, you can write notes</p>
+    <p class="page-content">
+      here, you can write notes that automatically save as you type them.
+    </p>
     <div class="notes"></div>
   </div>
 </template>
@@ -24,13 +26,17 @@
   -webkit-text-fill-color: transparent;
   background-clip: text;
   text-fill-color: transparent;
-  text-align: left;
+  text-align: center;
 }
 
 .notes {
   display: flex;
   flex-direction: row;
   gap: 10px;
+}
+
+.page-content {
+  font-size: 16px;
 }
 
 .note {
