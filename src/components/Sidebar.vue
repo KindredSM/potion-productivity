@@ -20,7 +20,7 @@
           <p>Clear all</p>
         </button></router-link
       >
-      <button @click="addPage" class="new-page"><p>New Page +</p></button>
+      <button @click="addPage" class="new-page"><p>New Page</p></button>
     </div>
   </ul>
 </template>
