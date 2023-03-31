@@ -54,8 +54,8 @@ export default {
 
       localStorage.setItem("pages", JSON.stringify(this.pages));
     },
-    clearAll(index: number) {
-      this.pages.splice(index);
+    clearAll() {
+      this.pages = [];
 
       localStorage.setItem("pages", JSON.stringify(this.pages));
     },
@@ -83,8 +83,7 @@ export default {
   align-items: center;
   padding-left: 10px;
   background-color: #1a1a1a;
-  width: 90%;
-  margin: 0 auto;
+  width: 95%;
   position: inherit;
   border-radius: 3px;
   transition: ease 0.3s;
@@ -134,7 +133,7 @@ export default {
   width: 200px;
   z-index: 3;
   padding-top: 104px;
-  background-color: rgb(39, 39, 39);
+  background-color: rgb(25, 25, 25);
   display: flex;
   justify-content: space-between;
   flex-direction: column;

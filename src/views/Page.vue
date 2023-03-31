@@ -40,7 +40,7 @@ textarea {
   border: none;
   resize: none;
   font-size: 16px;
-  background-color: #242424;
+  background-color: #161616;
 }
 
 #title {

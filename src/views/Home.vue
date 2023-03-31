@@ -1,7 +1,7 @@
 <template>
   <div class="home">
     <div class="header-section">
-      <img src="logo.svg" alt="" class="logo" />
+      <img src="/src/svgs/logo.svg" alt="" class="logo" />
       <h1 class="header">Welcome to Potion.</h1>
 
       <p class="page-content">
@@ -12,7 +12,11 @@
   </div>
 </template>
 
-<script lang="ts"></script>
+<script lang="ts">
+export default {
+  name: "Home",
+};
+</script>
 
 <style>
 .home {
