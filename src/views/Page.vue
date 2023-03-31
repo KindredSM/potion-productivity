@@ -2,10 +2,20 @@
   <div class="home">
     <div class="page">
       <h1 class="page-header">
-        <textarea v-model="title" key="title" @input="saveData"></textarea>
+        <textarea
+          v-model="title"
+          key="title"
+          id="title"
+          @input="saveData"
+          placeholder="Title..."></textarea>
       </h1>
       <p class="page-content">
-        <textarea v-model="content" key="content" @input="saveData"></textarea>
+        <textarea
+          v-model="content"
+          key="content"
+          id="content"
+          @input="saveData"
+          placeholder="Write your note..."></textarea>
       </p>
     </div>
   </div>
@@ -19,7 +29,7 @@
   padding-bottom: 120px;
   padding-top: 124px;
   margin-right: 32px;
-  margin-left: 128px;
+  margin-left: 210px;
 }
 
 textarea {
@@ -31,6 +41,16 @@ textarea {
   resize: none;
   font-size: 16px;
   background-color: #242424;
+}
+
+#title {
+  font-size: 24px;
+  font-weight: 700;
+}
+
+#content {
+  font-size: 16px;
+  font-weight: 500;
 }
 
 .page {

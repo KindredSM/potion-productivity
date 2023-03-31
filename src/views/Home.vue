@@ -1,12 +1,14 @@
 <template>
   <div class="home">
-    <div class="header">
+    <div class="header-section">
+      <img src="logo.svg" alt="" class="logo" />
       <h1 class="header">Welcome to Potion.</h1>
+
+      <p class="page-content">
+        here, you can write notes that automatically save as you type them.<br />
+        Click "New Page" on the left to start writing!
+      </p>
     </div>
-    <p class="page-content">
-      here, you can write notes that automatically save as you type them.
-    </p>
-    <div class="notes"></div>
   </div>
 </template>
 
@@ -17,9 +19,17 @@
   padding-bottom: 120px;
   padding-top: 124px;
   margin-right: 32px;
-  margin-left: 128px;
+  margin-left: 210px;
 }
 
+.logo {
+  width: 200px;
+}
+
+.header-section {
+  width: 100%;
+  margin: 0 auto;
+}
 .header {
   background: linear-gradient(215.78deg, #ff5d2b 2.99%, #ffb800 104.97%);
   -webkit-background-clip: text;
@@ -27,6 +37,7 @@
   background-clip: text;
   text-fill-color: transparent;
   text-align: center;
+  font-size: 48px;
 }
 
 .notes {
@@ -36,7 +47,10 @@
 }
 
 .page-content {
-  font-size: 16px;
+  font-size: 24px;
+  width: 100%;
+  text-align: center;
+  margin: 0 auto;
 }
 
 .note {

@@ -19,11 +19,7 @@
   margin-left: 20px;
   font-size: 24px;
 }
-.logo {
-  height: 50px;
-  margin-top: 12px;
-  margin-left: 12px;
-}
+
 nav {
   position: fixed;
   top: 0;

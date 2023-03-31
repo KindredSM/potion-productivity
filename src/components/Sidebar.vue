@@ -1,14 +1,27 @@
 <template>
   <ul class="sidebar">
-    <span class="menu">
+    <span class="menu" v-auto-animate>
       <li class="menu-item" v-for="(page, index) in pages" :key="page.id">
         <router-link :to="`/page/${page.id}`" class="menu-item">
           <p class="page-title">{{ page.title }}</p>
-          <button class="delete" @click="deletePage(index)">X</button>
+          <div class="button-wrapper">
+            <router-link to="/">
+              <button class="delete" @click="deletePage(index)">
+                X
+              </button></router-link
+            >
+          </div>
         </router-link>
       </li>
     </span>
-    <button @click="addPage"><p>New Page +</p></button>
+    <div class="buttons">
+      <router-link to="/">
+        <button @click="clearAll" class="clear-all">
+          <p>Clear all</p>
+        </button></router-link
+      >
+      <button @click="addPage" class="new-page"><p>New Page +</p></button>
+    </div>
   </ul>
 </template>
 
@@ -38,6 +51,11 @@ export default {
 
     deletePage(index: number) {
       this.pages.splice(index, 1);
+
+      localStorage.setItem("pages", JSON.stringify(this.pages));
+    },
+    clearAll(index: number) {
+      this.pages.splice(index);
 
       localStorage.setItem("pages", JSON.stringify(this.pages));
     },
@@ -79,6 +97,33 @@ export default {
 
 .delete {
   border-radius: 50%;
+}
+
+.button-wrapper {
+  position: absolute;
+  right: 1rem;
+}
+
+.buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0 auto;
+  margin-bottom: 20px;
+}
+
+.clear-all {
+  background: none;
+}
+
+.clear-all,
+.new-page {
+  border-radius: 3px;
+  width: 190px;
+}
+
+.new-page:hover {
+  background: none;
 }
 
 .sidebar {
