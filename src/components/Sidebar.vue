@@ -91,7 +91,7 @@ export default {
 
 .menu-item:hover {
   cursor: pointer;
-  background-color: #202020;
+  background-color: #161616;
 }
 
 .delete {
@@ -111,18 +111,11 @@ export default {
   margin-bottom: 20px;
 }
 
-.clear-all {
-  background: none;
-}
-
 .clear-all,
 .new-page {
   border-radius: 3px;
+  background-color: #161616;
   width: 190px;
-}
-
-.new-page:hover {
-  background: none;
 }
 
 .sidebar {
