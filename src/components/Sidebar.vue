@@ -59,9 +59,9 @@ export default {
       this.isSidebarVisible = !this.isSidebarVisible;
       this.rotate = !this.rotate;
       if (this.rotate) {
-        this.$refs.closeButton.classList.add("rotate");
+        (this.$refs.closeButton as HTMLElement).classList.add("rotate");
       } else {
-        this.$refs.closeButton.classList.remove("rotate");
+        (this.$refs.closeButton as HTMLElement).classList.remove("rotate");
       }
     },
     addPage() {
