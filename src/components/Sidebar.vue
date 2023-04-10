@@ -113,7 +113,7 @@ export default {
   position: fixed;
   padding: 0;
   margin: 0;
-  top: 6px;
+  top: 4px;
   left: 0;
   background-color: #1a1a1a;
   color: #fff;
