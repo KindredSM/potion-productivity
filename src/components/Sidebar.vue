@@ -177,6 +177,7 @@ export default {
   position: absolute;
   right: 0rem;
   bottom: 0.5rem;
+  color: white;
 }
 
 .buttons {
@@ -189,6 +190,7 @@ export default {
   gap: 10px;
   margin: 0 auto;
   margin-bottom: 20px;
+  color: white;
 }
 
 .clear-all,
@@ -199,16 +201,12 @@ export default {
 }
 
 @media screen and (max-width: 900px) {
-  .sidebar-header {
-    display: none;
-  }
-
   .sidebar {
     width: 50vw;
   }
 
   .delete {
-    bottom: 1rem;
+    bottom: 0.6rem;
   }
 
   .new-page,
