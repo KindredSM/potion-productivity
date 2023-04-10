@@ -28,8 +28,6 @@
 .home {
   padding-bottom: 120px;
   padding-top: 124px;
-  margin-right: 32px;
-  margin-left: 210px;
 }
 
 textarea {

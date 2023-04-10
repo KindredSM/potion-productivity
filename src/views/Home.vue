@@ -6,7 +6,7 @@
 
       <p class="page-content">
         here, you can write notes that automatically save as you type them.<br />
-        Click "New Page" on the left to start writing!
+        Open the sidebar and click "New Page" to start writing!
       </p>
     </div>
   </div>
@@ -22,8 +22,6 @@ export default {
 .home {
   padding-bottom: 120px;
   padding-top: 124px;
-  margin-right: 32px;
-  margin-left: 210px;
 }
 
 .logo {
