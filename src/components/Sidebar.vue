@@ -128,7 +128,7 @@ export default {
 .delete {
   border-radius: 50%;
   position: absolute;
-  right: 1rem;
+  right: 0rem;
   bottom: 0.5rem;
 }
 
