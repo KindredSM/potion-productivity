@@ -1,6 +1,6 @@
 <template>
-  <button class="close" @click="toggleMenu">x</button>
-  <ul class="sidebar" v-if="showMenu">
+  <ul class="sidebar">
+    <router-link to="/"> <h1 class="sidebar-header">Potion</h1></router-link>
     <span class="menu" v-auto-animate>
       <li class="menu-item" v-for="(page, index) in pages" :key="page.id">
         <router-link :to="`/page/${page.id}`" class="menu-item">
@@ -34,7 +34,6 @@ export default {
   data() {
     return {
       pages: [] as { id: string; title: string; content: string }[],
-      showMenu: true,
     };
   },
   created() {
@@ -42,9 +41,6 @@ export default {
     this.pages = storedPages || [];
   },
   methods: {
-    toggleMenu() {
-      this.showMenu = !this.showMenu;
-    },
     addPage() {
       const newPage = {
         id: uuidv4(),
@@ -80,23 +76,11 @@ export default {
   z-index: 3;
   background-color: rgb(25, 25, 25);
   display: flex;
-  justify-content: space-between;
   flex-direction: column;
 
   padding-left: 0;
 }
-.close {
-  width: 50px;
-  height: 50px;
-  left: 10rem;
-  position: absolute;
-  background-color: blue;
-  z-index: 99;
-}
 
-.close:hover {
-  cursor: pointer;
-}
 .menu {
   padding-top: 100px;
   display: flex;
@@ -114,9 +98,11 @@ export default {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  text-fill-color: transparent;
-
   font-size: 16px;
+}
+
+.sidebar-header:hover {
+  cursor: pointer;
 }
 
 .menu-item {
@@ -127,10 +113,11 @@ export default {
   align-items: center;
   background-color: #1a1a1a;
   width: 95%;
-  position: inherit;
+  gap: 10px;
   border-radius: 3px;
   transition: ease 0.3s;
   margin: 0 auto;
+  position: relative;
 }
 
 .menu-item:hover {
@@ -140,16 +127,17 @@ export default {
 
 .delete {
   border-radius: 50%;
-}
-
-.button-wrapper {
   position: absolute;
-  right: 0.5rem;
+  right: 1rem;
+  bottom: 0.5rem;
 }
 
 .buttons {
+  position: absolute;
+  bottom: 0;
   display: flex;
   flex-direction: column;
+  justify-content: flex-end;
   gap: 10px;
   margin: 0 auto;
   margin-bottom: 20px;
