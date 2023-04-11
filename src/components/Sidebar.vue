@@ -41,6 +41,7 @@ import { ref } from "vue";
 import close from "../svgs/close.vue";
 import DeleteButton from "../svgs/deleteButton.vue";
 import AddButton from "../svgs/addButton.vue";
+import db from "../firebase";
 
 export default {
   components: { close, DeleteButton, AddButton },
@@ -52,10 +53,19 @@ export default {
     };
   },
   created() {
-    const storedPages = JSON.parse(localStorage.getItem("pages") || "[]");
-    this.pages = storedPages || [];
+    this.fetchPages();
   },
   methods: {
+    async fetchPages() {
+      const pagesSnapshot = await db.collection("pages").get();
+      this.pages = pagesSnapshot.docs.map((doc: any) => {
+        return { id: doc.id, ...doc.data() } as {
+          id: string;
+          title: string;
+          content: string;
+        };
+      });
+    },
     clearAllAndToggleSidebar() {
       this.clearAll();
       this.toggleSidebar();
@@ -69,7 +79,7 @@ export default {
         (this.$refs.closeButton as HTMLElement).classList.remove("rotate");
       }
     },
-    addPage() {
+    async addPage() {
       const newPage = {
         id: uuidv4(),
         title: `Page ${this.pages.length + 1}`,
@@ -77,18 +87,20 @@ export default {
       };
       this.pages.push(newPage);
 
-      localStorage.setItem("pages", JSON.stringify(this.pages));
+      await db.collection("pages").doc(newPage.id).set(newPage);
     },
 
     async deletePage(index: number) {
+      const pageId = this.pages[index].id;
       this.pages.splice(index, 1);
-      localStorage.setItem("pages", JSON.stringify(this.pages));
+      await db.collection("pages").doc(pageId).delete();
     },
 
-    clearAll() {
+    async clearAll() {
+      for (const page of this.pages) {
+        await db.collection("pages").doc(page.id).delete();
+      }
       this.pages = [];
-
-      localStorage.setItem("pages", JSON.stringify(this.pages));
     },
   },
 };
