@@ -13,10 +13,9 @@
           <p class="page-title">{{ page.title }}</p>
           <div class="button-wrapper">
             <router-link to="/">
-              <button class="delete" @click="deletePage(index)">
-                X
-              </button></router-link
-            >
+              <button class="delete" @click.stop="deletePage(index)">
+                <delete-button></delete-button></button
+            ></router-link>
           </div>
         </router-link>
       </li>
@@ -36,9 +35,11 @@
 import { v4 as uuidv4 } from "uuid";
 import { ref } from "vue";
 import close from "../svgs/close.vue";
+import deleteButton from "../svgs/deleteButton.vue";
+import DeleteButton from "../svgs/deleteButton.vue";
 
 export default {
-  components: { close },
+  components: { close, DeleteButton },
   data() {
     return {
       pages: [] as { id: string; title: string; content: string }[],
@@ -75,11 +76,11 @@ export default {
       localStorage.setItem("pages", JSON.stringify(this.pages));
     },
 
-    deletePage(index: number) {
+    async deletePage(index: number) {
       this.pages.splice(index, 1);
-
       localStorage.setItem("pages", JSON.stringify(this.pages));
     },
+
     clearAll() {
       this.pages = [];
 
@@ -115,7 +116,7 @@ export default {
   margin: 0;
   top: 4px;
   left: 0;
-  background-color: #1a1a1a;
+  background: none;
   color: #fff;
   padding: 5px;
   border: 0;
@@ -165,6 +166,7 @@ export default {
   transition: ease 0.3s;
   margin: 0 auto;
   position: relative;
+  justify-content: space-between;
 }
 
 .menu-item:hover {
@@ -173,11 +175,16 @@ export default {
 }
 
 .delete {
-  border-radius: 50%;
-  position: absolute;
-  right: 0rem;
-  bottom: 0.5rem;
+  display: flex;
+  border: none;
+  background: none;
   color: white;
+  padding: 0;
+  transition: ease 0.2s;
+}
+
+.delete:hover {
+  opacity: 0.8;
 }
 
 .buttons {
@@ -190,19 +197,21 @@ export default {
   gap: 10px;
   margin: 0 auto;
   margin-bottom: 20px;
-  color: white;
 }
 
 .clear-all,
 .new-page {
-  width: 100%;
+  width: 90%;
+  margin: 0 auto;
   border-radius: 3px;
   background-color: #161616;
+  color: white;
+  text-decoration: none;
 }
 
 @media screen and (max-width: 900px) {
   .sidebar {
-    width: 50vw;
+    width: 100vw;
   }
 
   .delete {

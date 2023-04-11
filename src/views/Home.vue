@@ -25,7 +25,7 @@ export default {
 }
 
 .logo {
-  width: 200px;
+  width: 100px;
 }
 
 .header-section {
@@ -39,7 +39,7 @@ export default {
   background-clip: text;
   text-fill-color: transparent;
   text-align: center;
-  font-size: 48px;
+  font-size: 36px;
 }
 
 .notes {
@@ -49,7 +49,7 @@ export default {
 }
 
 .page-content {
-  font-size: 24px;
+  font-size: 16px;
   width: 100%;
   text-align: center;
   margin: 0 auto;

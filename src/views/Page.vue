@@ -15,7 +15,8 @@
           key="content"
           id="content"
           @input="saveData"
-          placeholder="Write your note..."></textarea>
+          placeholder="Write your note..."
+          oninput='this.style.height = "";this.style.height = this.scrollHeight + "px"'></textarea>
       </p>
     </div>
   </div>
@@ -48,16 +49,22 @@ textarea {
 
 #content {
   font-size: 16px;
-  font-weight: 500;
+  font-weight: 300;
 }
 
 .page {
   display: flex;
   flex-direction: column;
   text-align: left;
-  width: 70vw;
+  width: 65vw;
   margin: 0 auto;
   height: 100vh;
+}
+
+@media screen and (max-width: 900px) {
+  .page {
+    width: 100vw;
+  }
 }
 </style>
 
