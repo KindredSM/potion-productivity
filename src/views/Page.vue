@@ -65,6 +65,13 @@ textarea {
   .page {
     width: 100vw;
   }
+  #title {
+    font-size: 30px;
+  }
+
+  #content {
+    font-size: 20px;
+  }
 }
 </style>
 
