@@ -137,6 +137,8 @@ export default {
   font-size: 14px;
   text-align: left;
   width: 100%;
+  max-height: calc(100% - 300px);
+  overflow-y: auto;
 }
 
 .sidebar-header {
