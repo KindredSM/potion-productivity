@@ -41,7 +41,6 @@ import { ref } from "vue";
 import close from "../svgs/close.vue";
 import DeleteButton from "../svgs/deleteButton.vue";
 import AddButton from "../svgs/addButton.vue";
-import AddButton from "../svgs/addButton.vue";
 
 export default {
   components: { close, DeleteButton, AddButton },
