@@ -80,6 +80,8 @@ textarea {
 </style>
 
 <script lang="ts">
+import db from "../firebase";
+
 export default {
   props: ["id"],
 
@@ -87,50 +89,51 @@ export default {
     return {
       title: "",
       content: "",
+      unsubscribe: () => {},
     };
   },
   methods: {
-    saveData() {
-      const pages = JSON.parse(localStorage.getItem("pages") || "[]");
-      const index = pages.findIndex((p: any) => p.id === this.id);
-      if (index !== -1) {
-        pages[index].content = this.content;
-        pages[index].title = this.title;
-      } else {
-        pages.push({
-          id: this.id,
-          content: this.content,
-          title: this.title,
-        });
-      }
+    async saveData() {
       try {
-        localStorage.setItem("pages", JSON.stringify(pages));
+        await db.collection("pages").doc(this.id).update({
+          title: this.title,
+          content: this.content,
+        });
       } catch (e) {
-        console.error("Error while saving data to Local Storage:", e);
+        console.error("Error while saving data to Firestore:", e);
       }
     },
   },
   watch: {
-    id() {
-      const pages = JSON.parse(localStorage.getItem("pages") || "[]");
-      const page = pages.find((p: any) => p.id === this.id);
-      if (page) {
-        this.content = page.content;
-        this.title = page.title;
-      } else {
-        this.content = "";
-        this.title = "";
-      }
+    async id() {
+      const docRef = db.collection("pages").doc(this.id);
+      this.unsubscribe = await docRef.onSnapshot((doc: any) => {
+        if (doc.exists) {
+          const page = doc.data();
+          this.content = page.content;
+          this.title = page.title;
+        } else {
+          this.content = "";
+          this.title = "";
+        }
+      });
     },
   },
-  mounted() {
-    console.log("Page mounted with id", this.id);
-    const pages = JSON.parse(localStorage.getItem("pages") || "[]");
-    const page = pages.find((p: any) => p.id === this.id);
-    if (page) {
-      this.content = page.content;
-      this.title = page.title;
+  beforeDestroy() {
+    if (this.unsubscribe) {
+      this.unsubscribe();
     }
+  },
+  async mounted() {
+    console.log("Page mounted with id", this.id);
+    const docRef = db.collection("pages").doc(this.id);
+    this.unsubscribe = await docRef.onSnapshot((doc: any) => {
+      if (doc.exists) {
+        const page = doc.data();
+        this.content = page.content;
+        this.title = page.title;
+      }
+    });
   },
 };
 </script>
