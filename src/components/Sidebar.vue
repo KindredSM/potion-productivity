@@ -23,10 +23,14 @@
     <div class="buttons">
       <router-link to="/">
         <button @click="clearAllAndToggleSidebar" class="clear-all">
+          <delete-button class="clear-button"></delete-button>
           <p>Clear all</p>
         </button></router-link
       >
-      <button @click="addPage" class="new-page"><p>New Page</p></button>
+      <button @click="addPage" class="new-page">
+        <add-button class="add-button"></add-button>
+        <p>New Page</p>
+      </button>
     </div>
   </ul>
 </template>
@@ -35,11 +39,12 @@
 import { v4 as uuidv4 } from "uuid";
 import { ref } from "vue";
 import close from "../svgs/close.vue";
-import deleteButton from "../svgs/deleteButton.vue";
 import DeleteButton from "../svgs/deleteButton.vue";
+import AddButton from "../svgs/addButton.vue";
+import AddButton from "../svgs/addButton.vue";
 
 export default {
-  components: { close, DeleteButton },
+  components: { close, DeleteButton, AddButton },
   data() {
     return {
       pages: [] as { id: string; title: string; content: string }[],
@@ -209,6 +214,20 @@ export default {
   background-color: #161616;
   color: white;
   text-decoration: none;
+  position: relative;
+  transition: ease 0.2s;
+}
+
+.clear-all:hover,
+.new-page:hover {
+  background-color: #232323;
+}
+
+.add-button,
+.clear-button {
+  position: absolute;
+  left: 20px;
+  bottom: 14px;
 }
 
 @media screen and (max-width: 900px) {

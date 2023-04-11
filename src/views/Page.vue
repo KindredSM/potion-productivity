@@ -28,7 +28,7 @@
 }
 .home {
   padding-bottom: 120px;
-  padding-top: 124px;
+  padding-top: 100px;
 }
 
 textarea {
@@ -45,6 +45,7 @@ textarea {
 #title {
   font-size: 24px;
   font-weight: 700;
+  padding-bottom: 0;
 }
 
 #content {
@@ -62,6 +63,9 @@ textarea {
 }
 
 @media screen and (max-width: 900px) {
+  .home {
+    padding-top: 50px;
+  }
   .page {
     width: 100vw;
   }

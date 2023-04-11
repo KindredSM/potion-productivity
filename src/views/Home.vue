@@ -21,7 +21,7 @@ export default {
 <style>
 .home {
   padding-bottom: 120px;
-  padding-top: 124px;
+  padding-top: 100px;
 }
 
 .logo {
