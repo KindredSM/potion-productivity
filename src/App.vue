@@ -1,12 +1,36 @@
 <script lang="ts">
+import { defineComponent } from "vue";
+import { useUserStore } from "./store/userStore";
+import { auth, onAuthStateChanged } from "./firebase";
 import Sidebar from "./components/Sidebar.vue";
+import Navbar from "./components/Navbar.vue";
 
 export default {
-  components: { Sidebar },
+  name: "App",
+  components: {
+    Sidebar,
+    Navbar,
+  },
+  setup() {
+    // Check the user's authentication state when the component is mounted
+    onAuthStateChanged(auth, (user) => {
+      const userStore = useUserStore(); // Move the useUserStore() call inside the callback
+      if (user) {
+        console.log("User is signed in.");
+        userStore.setUser(user); // Update the user store
+      } else {
+        console.log("User is signed out.");
+        userStore.setUser(null); // Clear the user store
+      }
+    });
+
+    return {};
+  },
 };
 </script>
 
 <template>
+  <navbar />
   <sidebar />
   <router-view />
 </template>

@@ -6,7 +6,6 @@
           v-model="title"
           key="title"
           id="title"
-          @input="saveData"
           placeholder="Title..."></textarea>
       </h1>
       <p class="page-content">
@@ -14,7 +13,6 @@
           v-model="content"
           key="content"
           id="content"
-          @input="saveData"
           placeholder="Write your note..."
           oninput='this.style.height = "";this.style.height = this.scrollHeight + "px"'></textarea>
       </p>
@@ -80,7 +78,11 @@ textarea {
 </style>
 
 <script lang="ts">
-import db from "../firebase";
+import { ref, onUnmounted, watch } from "vue";
+import { auth } from "../firebase";
+import { getFirestore, doc, updateDoc, onSnapshot } from "firebase/firestore";
+
+const db = getFirestore();
 
 export default {
   props: ["id"],
@@ -94,21 +96,28 @@ export default {
   },
   methods: {
     async saveData() {
+      if (!auth.currentUser) return;
+
       try {
-        await db.collection("pages").doc(this.id).update({
-          title: this.title,
-          content: this.content,
-        });
+        await updateDoc(
+          doc(db, "users", auth.currentUser.uid, "pages", this.id),
+          {
+            title: this.title,
+            content: this.content,
+          }
+        );
       } catch (e) {
         console.error("Error while saving data to Firestore:", e);
       }
     },
   },
   watch: {
-    async id() {
-      const docRef = db.collection("pages").doc(this.id);
-      this.unsubscribe = await docRef.onSnapshot((doc: any) => {
-        if (doc.exists) {
+    id() {
+      if (!auth.currentUser) return;
+
+      const docRef = doc(db, "users", auth.currentUser.uid, "pages", this.id);
+      this.unsubscribe = onSnapshot(docRef, (doc: any) => {
+        if (doc.exists()) {
           const page = doc.data();
           this.content = page.content;
           this.title = page.title;
@@ -118,17 +127,26 @@ export default {
         }
       });
     },
+    title() {
+      this.saveData();
+    },
+    content() {
+      this.saveData();
+    },
   },
-  beforeDestroy() {
+
+  beforeUnmount() {
     if (this.unsubscribe) {
       this.unsubscribe();
     }
   },
   async mounted() {
     console.log("Page mounted with id", this.id);
-    const docRef = db.collection("pages").doc(this.id);
-    this.unsubscribe = await docRef.onSnapshot((doc: any) => {
-      if (doc.exists) {
+    if (!auth.currentUser) return;
+
+    const docRef = doc(db, "users", auth.currentUser.uid, "pages", this.id);
+    this.unsubscribe = onSnapshot(docRef, (doc: any) => {
+      if (doc.exists()) {
         const page = doc.data();
         this.content = page.content;
         this.title = page.title;

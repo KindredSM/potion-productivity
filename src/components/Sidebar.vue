@@ -37,27 +37,68 @@
 
 <script lang="ts">
 import { v4 as uuidv4 } from "uuid";
+import { auth, provider } from "../firebase";
+import {
+  doc,
+  setDoc,
+  deleteDoc,
+  collection,
+  getDocs,
+  writeBatch,
+} from "firebase/firestore";
+
 import { ref } from "vue";
 import close from "../svgs/close.vue";
 import DeleteButton from "../svgs/deleteButton.vue";
 import AddButton from "../svgs/addButton.vue";
-import db from "../firebase";
+import { getFirestore } from "firebase/firestore";
+
+const db = getFirestore();
 
 export default {
   components: { close, DeleteButton, AddButton },
   data() {
     return {
       pages: [] as { id: string; title: string; content: string }[],
-      isSidebarVisible: false,
+      isSidebarVisible: true,
       rotate: false,
+      title: "",
+      content: "",
     };
   },
   created() {
     this.fetchPages();
   },
+
   methods: {
+    async saveData(id: string, title: string, content: string) {
+      if (!auth.currentUser) return;
+
+      const docRef = doc(db, "users", auth.currentUser.uid, "pages", id);
+      try {
+        await setDoc(docRef, {
+          title,
+          content,
+        });
+      } catch (e) {
+        console.error("Error while saving data to Firestore:", e);
+      }
+    },
+
     async fetchPages() {
-      const pagesSnapshot = await db.collection("pages").get();
+      if (!auth.currentUser) return;
+
+      auth.onAuthStateChanged((user) => {
+        if (user) {
+          this.fetchPages();
+        } else {
+          this.pages = [];
+        }
+      });
+
+      const pagesSnapshot = await getDocs(
+        collection(db, "users", auth.currentUser.uid, "pages")
+      );
       this.pages = pagesSnapshot.docs.map((doc: any) => {
         return { id: doc.id, ...doc.data() } as {
           id: string;
@@ -66,6 +107,10 @@ export default {
         };
       });
     },
+    async onMounted() {
+      this.fetchPages();
+    },
+
     clearAllAndToggleSidebar() {
       this.clearAll();
       this.toggleSidebar();
@@ -80,6 +125,10 @@ export default {
       }
     },
     async addPage() {
+      if (!auth.currentUser) {
+        alert("Sign in to create notes");
+        return;
+      }
       const newPage = {
         id: uuidv4(),
         title: `Page ${this.pages.length + 1}`,
@@ -87,19 +136,30 @@ export default {
       };
       this.pages.push(newPage);
 
-      await db.collection("pages").doc(newPage.id).set(newPage);
+      await setDoc(
+        doc(db, "users", auth.currentUser.uid, "pages", newPage.id),
+        newPage
+      );
+
+      this.$router.push(`/page/${newPage.id}`);
     },
 
     async deletePage(index: number) {
+      if (!auth.currentUser) return;
+
       const pageId = this.pages[index].id;
       this.pages.splice(index, 1);
-      await db.collection("pages").doc(pageId).delete();
+      await deleteDoc(doc(db, "users", auth.currentUser.uid, "pages", pageId));
     },
 
     async clearAll() {
+      if (!auth.currentUser) return;
+
+      const batch = writeBatch(db);
       for (const page of this.pages) {
-        await db.collection("pages").doc(page.id).delete();
+        batch.delete(doc(db, "users", auth.currentUser.uid, "pages", page.id));
       }
+      await batch.commit();
       this.pages = [];
     },
   },
