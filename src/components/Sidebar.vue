@@ -51,7 +51,7 @@ import { ref } from "vue";
 import close from "../svgs/close.vue";
 import DeleteButton from "../svgs/deleteButton.vue";
 import AddButton from "../svgs/addButton.vue";
-import { getFirestore } from "firebase/firestore";
+import { getFirestore, onSnapshot } from "firebase/firestore";
 
 const db = getFirestore();
 
@@ -88,23 +88,15 @@ export default {
     async fetchPages() {
       if (!auth.currentUser) return;
 
-      auth.onAuthStateChanged((user) => {
-        if (user) {
-          this.fetchPages();
-        } else {
-          this.pages = [];
-        }
-      });
-
-      const pagesSnapshot = await getDocs(
-        collection(db, "users", auth.currentUser.uid, "pages")
-      );
-      this.pages = pagesSnapshot.docs.map((doc: any) => {
-        return { id: doc.id, ...doc.data() } as {
-          id: string;
-          title: string;
-          content: string;
-        };
+      const pagesRef = collection(db, "users", auth.currentUser.uid, "pages");
+      const unsubscribe = onSnapshot(pagesRef, (querySnapshot) => {
+        this.pages = querySnapshot.docs.map((doc: any) => {
+          return { id: doc.id, ...doc.data() } as {
+            id: string;
+            title: string;
+            content: string;
+          };
+        });
       });
     },
     async onMounted() {

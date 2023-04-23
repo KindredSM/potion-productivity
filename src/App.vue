@@ -5,7 +5,7 @@ import { auth, onAuthStateChanged } from "./firebase";
 import Sidebar from "./components/Sidebar.vue";
 import Navbar from "./components/Navbar.vue";
 
-export default {
+export default defineComponent({
   name: "App",
   components: {
     Sidebar,
@@ -26,7 +26,7 @@ export default {
 
     return {};
   },
-};
+});
 </script>
 
 <template>

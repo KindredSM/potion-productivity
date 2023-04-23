@@ -15,7 +15,7 @@ import "firebase/compat/auth";
 import * as firebaseui from "firebaseui";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyASUUhv96yP8JuJ1YcFY-yl9w8AwqtoBc8",
+  apiKey: import.meta.env.VITE_API_KEY,
   authDomain: "potion-14662.firebaseapp.com",
   projectId: "potion-14662",
   storageBucket: "potion-14662.appspot.com",
