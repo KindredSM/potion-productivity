@@ -8,6 +8,7 @@ export const useUserStore = defineStore({
   actions: {
     setUser(newUser: any) {
       this.user = newUser;
+      console.log("hello");
     },
   },
 });

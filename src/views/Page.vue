@@ -6,7 +6,8 @@
           v-model="title"
           key="title"
           id="title"
-          placeholder="Title..."></textarea>
+          placeholder="Title..."
+          @input="saveData(page.id, title, content)"></textarea>
       </h1>
       <p class="page-content">
         <textarea
@@ -14,7 +15,9 @@
           key="content"
           id="content"
           placeholder="Write your note..."
-          oninput='this.style.height = "";this.style.height = this.scrollHeight + "px"'></textarea>
+          oninput='this.style.height = "";this.style.height = this.scrollHeight + "px"'
+          @input="saveData(page.id, title, content)"></textarea>
+        <span v-if="pagesStore.loading">Loading...</span>
       </p>
     </div>
   </div>
@@ -78,80 +81,36 @@ textarea {
 </style>
 
 <script lang="ts">
-import { ref, onUnmounted, watch } from "vue";
-import { auth } from "../firebase";
-import { getFirestore, doc, updateDoc, onSnapshot } from "firebase/firestore";
-
-const db = getFirestore();
+import { computed, watchEffect } from "vue";
+import { usePagesStore } from "../store/pageStore";
+import { useRoute } from "vue-router";
 
 export default {
-  props: ["id"],
+  props: ["page", "id"],
 
   data() {
     return {
       title: "",
       content: "",
-      unsubscribe: () => {},
     };
   },
-  methods: {
-    async saveData() {
-      if (!auth.currentUser) return;
+  setup() {
+    const pagesStore = usePagesStore();
+    const route = useRoute();
 
-      try {
-        await updateDoc(
-          doc(db, "users", auth.currentUser.uid, "pages", this.id),
-          {
-            title: this.title,
-            content: this.content,
-          }
-        );
-      } catch (e) {
-        console.error("Error while saving data to Firestore:", e);
-      }
-    },
-  },
-  watch: {
-    id() {
-      if (!auth.currentUser) return;
-
-      const docRef = doc(db, "users", auth.currentUser.uid, "pages", this.id);
-      this.unsubscribe = onSnapshot(docRef, (doc: any) => {
-        if (doc.exists()) {
-          const page = doc.data();
-          this.content = page.content;
-          this.title = page.title;
-        } else {
-          this.content = "";
-          this.title = "";
-        }
-      });
-    },
-    title() {
-      this.saveData();
-    },
-    content() {
-      this.saveData();
-    },
-  },
-
-  beforeUnmount() {
-    if (this.unsubscribe) {
-      this.unsubscribe();
-    }
-  },
-  async mounted() {
-    console.log("Page mounted with id", this.id);
-    if (!auth.currentUser) return;
-
-    const docRef = doc(db, "users", auth.currentUser.uid, "pages", this.id);
-    this.unsubscribe = onSnapshot(docRef, (doc: any) => {
-      if (doc.exists()) {
-        const page = doc.data();
-        this.content = page.content;
-        this.title = page.title;
-      }
+    const page = computed(() => {
+      return pagesStore.getPageById(route.params.id as string);
     });
+
+    const saveData = (id: string, title: string, content: string) => {
+      pagesStore.saveData(id, title, content);
+    };
+
+    return {
+      page,
+      saveData,
+      pagesStore,
+    };
   },
 };
 </script>

@@ -2,7 +2,7 @@
   <button ref="closeButton" class="close" @click="toggleSidebar">
     <close></close>
   </button>
-  <ul class="sidebar" :class="{ 'slide-out': !isSidebarVisible }">
+  <ul class="sidebar" ref="sidebar" :class="{ 'slide-out': !isSidebarVisible }">
     <router-link to="/"> <h1 class="sidebar-header">Potion</h1></router-link>
     <span class="menu" v-auto-animate>
       <li class="menu-item" v-for="(page, index) in pages" :key="page.id">
@@ -47,106 +47,63 @@ import {
   writeBatch,
 } from "firebase/firestore";
 
-import { ref } from "vue";
+import { onMounted } from "vue";
+import { useRouter } from "vue-router";
 import close from "../svgs/close.vue";
 import DeleteButton from "../svgs/deleteButton.vue";
 import AddButton from "../svgs/addButton.vue";
 import { getFirestore, onSnapshot } from "firebase/firestore";
-
-const db = getFirestore();
+import { usePagesStore } from "../store/pageStore";
+import db from "../firebase";
+import router from "../router";
 
 export default {
   components: { close, DeleteButton, AddButton },
-  data() {
+  setup() {
+    const pagesStore = usePagesStore();
+
+    const addPage = async () => {
+      const id = await pagesStore.addPage();
+      router.push({ name: "Page", params: { id } });
+    };
+
+    // Fetch pages when the component is created
+    onMounted(() => {
+      pagesStore.fetchUserData();
+    });
+
     return {
-      pages: [] as { id: string; title: string; content: string }[],
+      pages: pagesStore.pages,
+      addPage,
       isSidebarVisible: true,
       rotate: false,
-      title: "",
-      content: "",
     };
   },
-  created() {
-    this.fetchPages();
-  },
-
   methods: {
-    async saveData(id: string, title: string, content: string) {
-      if (!auth.currentUser) return;
-
-      const docRef = doc(db, "users", auth.currentUser.uid, "pages", id);
-      try {
-        await setDoc(docRef, {
-          title,
-          content,
-        });
-      } catch (e) {
-        console.error("Error while saving data to Firestore:", e);
-      }
-    },
-
-    async fetchPages() {
-      if (!auth.currentUser) return;
-
-      const pagesRef = collection(db, "users", auth.currentUser.uid, "pages");
-      const unsubscribe = onSnapshot(pagesRef, (querySnapshot) => {
-        this.pages = querySnapshot.docs.map((doc: any) => {
-          return { id: doc.id, ...doc.data() } as {
-            id: string;
-            title: string;
-            content: string;
-          };
-        });
-      });
-    },
-    async onMounted() {
-      this.fetchPages();
-    },
-
-    clearAllAndToggleSidebar() {
-      this.clearAll();
-      this.toggleSidebar();
-    },
     toggleSidebar() {
+      console.log("sidebar toggled");
       this.isSidebarVisible = !this.isSidebarVisible;
       this.rotate = !this.rotate;
       if (this.rotate) {
         (this.$refs.closeButton as HTMLElement).classList.add("rotate");
+        (this.$refs.sidebar as HTMLElement).classList.add("slide-out");
       } else {
         (this.$refs.closeButton as HTMLElement).classList.remove("rotate");
+        (this.$refs.sidebar as HTMLElement).classList.remove("slide-out");
       }
     },
-    async addPage() {
-      if (!auth.currentUser) {
-        alert("Sign in to create notes");
-        return;
-      }
-      const newPage = {
-        id: uuidv4(),
-        title: `Page ${this.pages.length + 1}`,
-        content: "",
-      };
-      this.pages.push(newPage);
-
-      await setDoc(
-        doc(db, "users", auth.currentUser.uid, "pages", newPage.id),
-        newPage
-      );
-
-      this.$router.push(`/page/${newPage.id}`);
+    clearAllAndToggleSidebar() {
+      this.clearAll();
+      this.toggleSidebar();
     },
-
     async deletePage(index: number) {
       if (!auth.currentUser) return;
-
       const pageId = this.pages[index].id;
       this.pages.splice(index, 1);
       await deleteDoc(doc(db, "users", auth.currentUser.uid, "pages", pageId));
     },
-
     async clearAll() {
       if (!auth.currentUser) return;
-
       const batch = writeBatch(db);
       for (const page of this.pages) {
         batch.delete(doc(db, "users", auth.currentUser.uid, "pages", page.id));
@@ -159,6 +116,9 @@ export default {
 </script>
 
 <style>
+.slide-out {
+  transform: translateX(-100%);
+}
 .sidebar {
   position: fixed;
   top: -24px;
@@ -171,10 +131,6 @@ export default {
   flex-direction: column;
   padding-left: 0;
   transition: transform 0.2s ease-in-out;
-}
-
-.slide-out {
-  transform: translateX(-100%);
 }
 
 .close {
