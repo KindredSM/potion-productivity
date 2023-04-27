@@ -28,7 +28,6 @@ const analytics = getAnalytics(app);
 const ui = new firebaseui.auth.AuthUI(getAuth(app));
 const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
-
 const db = getFirestore(app);
 setPersistence(auth, browserLocalPersistence);
 

@@ -1,45 +1,28 @@
 <template>
   <nav>
     <ul class="user">
-      <button @click="signInWithGoogle" class="sign-in">Sign in</button>
-      <button @click="signOut" class="sign-out">Sign Out</button>
+      <button @click="signInWithGoogle" class="sign-in" v-if="!user">
+        Sign in
+      </button>
+      <button @click="signOut" class="sign-out" v-if="user">Sign Out</button>
     </ul>
   </nav>
 </template>
-
 <script lang="ts">
-import {
-  getAuth,
-  GoogleAuthProvider,
-  signInWithPopup,
-  signOut,
-} from "../firebase";
-
-const auth = getAuth();
-const provider = new GoogleAuthProvider();
+import { useUserStore } from "../store/userStore";
 
 export default {
-  methods: {
-    async signInWithGoogle() {
-      try {
-        const result = await signInWithPopup(auth, provider);
-        const user = result.user;
-        console.log("User signed in:", user);
-      } catch (error) {
-        console.error("Error signing in:", error);
-      }
-    },
-    async signOut() {
-      try {
-        await signOut(auth);
-      } catch (error) {
-        console.error("Error signing out:", error);
-      }
-    },
+  setup() {
+    const userStore = useUserStore();
+
+    return {
+      user: userStore.user,
+      signInWithGoogle: userStore.signInWithGoogle,
+      signOut: userStore.signOut,
+    };
   },
 };
 </script>
-
 <style scoped>
 nav {
   position: fixed;
