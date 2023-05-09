@@ -84,6 +84,7 @@ textarea {
 import { computed, watchEffect } from "vue";
 import { usePagesStore } from "../store/pageStore";
 import { useRoute } from "vue-router";
+import { onMounted } from "@vue/runtime-core";
 
 export default {
   props: ["page", "id"],
@@ -97,6 +98,10 @@ export default {
   setup() {
     const pagesStore = usePagesStore();
     const route = useRoute();
+
+    onMounted(() => {
+      pagesStore.fetchUserData();
+    });
 
     const page = computed(() => {
       return pagesStore.getPageById(route.params.id as string);

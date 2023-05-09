@@ -1,18 +1,21 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import { useUserStore } from "./store/userStore";
+import { usePagesStore } from "./store/pageStore";
 import { auth, onAuthStateChanged } from "./firebase";
 import Sidebar from "./components/Sidebar.vue";
 import Navbar from "./components/Navbar.vue";
 
-export default defineComponent({
+export default {
   name: "App",
   components: {
     Sidebar,
     Navbar,
   },
-  setup() {
-    // Check the user's authentication state when the component is mounted
+  created() {
+    const pagesStore = usePagesStore();
+    pagesStore.fetchUserData();
+    // Check the user's authentication state when the component is created
     onAuthStateChanged(auth, (user) => {
       const userStore = useUserStore(); // Move the useUserStore() call inside the callback
       if (user) {
@@ -23,10 +26,8 @@ export default defineComponent({
         userStore.setUser(null); // Clear the user store
       }
     });
-
-    return {};
   },
-});
+};
 </script>
 
 <template>

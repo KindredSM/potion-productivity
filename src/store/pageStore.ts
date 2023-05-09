@@ -1,4 +1,3 @@
-// src/store/pagesStore.ts
 import { defineStore } from "pinia";
 import { v4 as uuidv4 } from "uuid";
 import {
@@ -14,6 +13,7 @@ import {
 } from "firebase/firestore";
 import { auth } from "../firebase";
 import db from "../firebase";
+import { onMounted } from "@vue/runtime-core";
 
 export const usePagesStore = defineStore("pages", {
   state: () => ({
@@ -31,18 +31,14 @@ export const usePagesStore = defineStore("pages", {
       this.loading = true;
       try {
         const pagesRef = collection(db, "users", auth.currentUser.uid, "pages");
-        const pagesQuery = query(pagesRef);
-
-        onSnapshot(pagesQuery, (querySnapshot) => {
-          this.pages = [];
-          querySnapshot.forEach((doc) => {
-            const { id, title, content } = doc.data();
-            this.pages.push({ id, title, content }); // Make sure the object contains all the required properties
-          });
-          this.loading = false;
+        const pagesSnapshot = await getDocs(pagesRef);
+        this.pages = pagesSnapshot.docs.map((doc) => {
+          const { id, title, content } = doc.data();
+          return { id, title, content };
         });
       } catch (error) {
         console.error("Error fetching user data:", error);
+      } finally {
         this.loading = false;
       }
     },
@@ -109,4 +105,8 @@ export const usePagesStore = defineStore("pages", {
       }
     },
   },
+});
+
+onMounted(() => {
+  usePagesStore().fetchUserData();
 });

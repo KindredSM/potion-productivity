@@ -8,18 +8,28 @@
     </ul>
   </nav>
 </template>
-<script lang="ts">
+<script>
 import { useUserStore } from "../store/userStore";
 
 export default {
-  setup() {
+  data() {
     const userStore = useUserStore();
 
     return {
       user: userStore.user,
-      signInWithGoogle: userStore.signInWithGoogle,
-      signOut: userStore.signOut,
     };
+  },
+  methods: {
+    signInWithGoogle() {
+      const userStore = useUserStore();
+      userStore.signInWithGoogle();
+      console.log("signed in");
+    },
+    signOut() {
+      const userStore = useUserStore();
+      userStore.signOut();
+      console.log("signed out");
+    },
   },
 };
 </script>

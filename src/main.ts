@@ -4,6 +4,7 @@ import App from "./App.vue";
 import router from "./router";
 import { autoAnimatePlugin } from "@formkit/auto-animate/vue";
 import { createPinia } from "pinia";
+import { usePagesStore } from "./store/pageStore";
 import { auth, onAuthStateChanged } from "./firebase";
 
 const pinia = createPinia();
